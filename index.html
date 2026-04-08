@@ -390,6 +390,47 @@
   }
   .form-submit:hover { background: #a0f0b8; transform: translateY(-2px); }
 
+  /* ── NOTICIAS ── */
+  .noticias {
+    padding: 5rem 4rem;
+    background: var(--gris);
+  }
+  .noticias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .noticia-card {
+    background: var(--blanco);
+    border-radius: 10px;
+    padding: 1.75rem;
+    border-top: 4px solid var(--verde);
+    transition: transform 0.2s;
+  }
+  .noticia-card:hover { transform: translateY(-4px); }
+  .noticia-fecha {
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--verde); margin-bottom: 0.75rem;
+  }
+  .noticia-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.3rem; font-weight: 800;
+    color: var(--verde-oscuro); margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+  .noticia-card p {
+    font-size: 0.9rem; color: var(--texto-suave);
+    line-height: 1.6; margin-bottom: 1rem;
+  }
+  .noticia-tag {
+    display: inline-block;
+    background: var(--verde-claro);
+    color: var(--verde-oscuro);
+    font-size: 0.75rem; font-weight: 700;
+    padding: 0.25rem 0.75rem; border-radius: 20px;
+  }
+
   /* ── FOOTER ── */
   footer {
     background: #071a0e;
@@ -447,7 +488,8 @@
   <ul>
     <li><a href="#propuestas">Propuestas</a></li>
     <li><a href="#apoyame">Apoyame</a></li>
-    <li><a href="#voluntario">Voluntario</a></li>
+    <li><a href="#noticias">Noticias</a></li>
+    
   </ul>
 </nav>
 
@@ -573,7 +615,7 @@
   <div class="section-header">
     <p class="label">Sumate al cambio</p>
     <h2>¿Cómo podés apoyar?</h2>
-    <p>Cada gesto cuenta. Elegí cómo querés acompañar la campaña.</p>
+    <p>Cada gesto cuenta. Seguinos y compartí nuestra campaña.</p>
   </div>
   <div class="apoyo-cards">
     <a href="https://chat.whatsapp.com/IUoG41O1zRN4NMKVbO8Qpw" class="apoyo-card" target="_blank">
@@ -593,50 +635,45 @@
         <a href="https://x.com/PyoHonesto" target="_blank" style="background:#7ede9a; color:#0f5228; padding:0.45rem 1rem; border-radius:3px; font-weight:700; font-size:0.8rem; letter-spacing:1px; text-transform:uppercase; text-decoration:none;">Twitter / X</a>
       </div>
     </div>
-    <a href="#voluntario" class="apoyo-card">
-      <span class="apoyo-icon">🙋</span>
-      <h3>Ser voluntario</h3>
-      <p>Completá el formulario y formá parte del equipo de campaña en tu barrio.</p>
-      <span class="apoyo-btn">Inscribirme</span>
-    </a>
+
   </div>
 
-  <!-- Form voluntario -->
-  <div class="voluntario-form" id="voluntario">
-    <h3>Quiero ser voluntario/a</h3>
-    <p>Completá tus datos y te contactamos para coordinar</p>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Nombre</label>
-        <input type="text" id="f-nombre" placeholder="Tu nombre">
-      </div>
-      <div class="form-group">
-        <label>Apellido</label>
-        <input type="text" id="f-apellido" placeholder="Tu apellido">
-      </div>
+</section>
+
+<!-- NOTICIAS -->
+<section class="noticias" id="noticias">
+  <div class="section-header">
+    <p class="label">Seguí la campaña</p>
+    <h2>Noticias y Novedades</h2>
+  </div>
+  <div class="noticias-grid">
+    <div class="noticia-card">
+      <div class="noticia-fecha">Abril 2026</div>
+      <h3>Arranca la campaña en los barrios</h3>
+      <p>Comenzamos las recorridas por los barrios de Asunción escuchando las necesidades reales de los vecinos. La voz del pueblo nos guía.</p>
+      <div class="noticia-tag">🚶 Recorrida</div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>WhatsApp</label>
-        <input type="tel" id="f-tel" placeholder="0981 000 000">
-      </div>
-      <div class="form-group">
-        <label>Barrio</label>
-        <select id="f-barrio">
-          <option value="">Seleccioná tu barrio</option>
-          <option>Centro</option>
-          <option>Sajonia</option>
-          <option>Trinidad</option>
-          <option>Las Mercedes</option>
-          <option>Jara</option>
-          <option>San Pablo</option>
-          <option>Mburucuyá</option>
-          <option>Zeballos Cué</option>
-          <option>Otro</option>
-        </select>
-      </div>
+    <div class="noticia-card">
+      <div class="noticia-fecha">Abril 2026</div>
+      <h3>Presentamos nuestras 5 propuestas</h3>
+      <p>Auditoría ciudadana, protección de árboles, control del personal municipal, transporte inteligente y recuperar la plata robada. Estas son nuestras banderas.</p>
+      <div class="noticia-tag">📋 Propuestas</div>
     </div>
-    <button class="form-submit" onclick="submitForm()">¡Me sumo a la campaña! 🐾</button>
+    <div class="noticia-card">
+      <div class="noticia-fecha">Próximamente</div>
+      <h3>Debate público con vecinos</h3>
+      <p>Organizamos un encuentro abierto en el barrio para escuchar propuestas, debatir ideas y construir juntos el programa de gobierno municipal.</p>
+      <div class="noticia-tag">🗣️ Evento</div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top:2.5rem;">
+    <p style="color:var(--texto-suave); font-size:0.95rem; margin-bottom:1.25rem;">Seguí todas las novedades en nuestras redes</p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="https://www.facebook.com/comandantepuma2026" target="_blank" class="btn-primary" style="font-size:0.85rem; padding:0.65rem 1.5rem;">Facebook</a>
+      <a href="https://www.instagram.com/comandantepuma" target="_blank" class="btn-primary" style="font-size:0.85rem; padding:0.65rem 1.5rem;">Instagram</a>
+      <a href="https://www.tiktok.com/@comandantepuma" target="_blank" class="btn-primary" style="font-size:0.85rem; padding:0.65rem 1.5rem;">TikTok</a>
+      <a href="https://x.com/PyoHonesto" target="_blank" class="btn-primary" style="font-size:0.85rem; padding:0.65rem 1.5rem;">Twitter / X</a>
+    </div>
   </div>
 </section>
 
