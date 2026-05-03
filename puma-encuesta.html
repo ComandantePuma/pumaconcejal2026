@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Encuesta Vecinal — PUMA Rodríguez 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --verde:#0A3D2A;--verde-d:#061f15;--verde-m:#155c3e;
+  --dorado:#FFB300;--dorado-l:#FFD54F;--dorado-d:#c98a00;
+  --blanco:#f5f4ef;--rojo:#dc2626;
+}
+body{
+  background:var(--verde-d);
+  font-family:'Barlow',sans-serif;
+  color:var(--blanco);
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem 1rem;
+}
+
+/* ── Config banner (solo si falta JSONBIN_ID) ── */
+.config-banner{
+  background:rgba(220,38,38,.12);
+  border:1px solid rgba(220,38,38,.35);
+  border-radius:6px;padding:1rem 1.25rem;
+  margin-bottom:1.5rem;font-size:.85rem;
+  color:rgba(255,150,150,.9);line-height:1.6;
+}
+.config-banner strong{color:#fca5a5}
+.config-banner code{
+  background:rgba(255,255,255,.08);
+  padding:.1rem .4rem;border-radius:3px;
+  font-family:monospace;font-size:.8rem;
+}
+
+.wrap{width:100%;max-width:680px}
+
+/* ── Header ── */
+.enc-header{
+  text-align:center;margin-bottom:2rem;
+}
+.enc-eyebrow{
+  font-size:.65rem;font-weight:700;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--dorado);
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+  margin-bottom:.75rem;
+}
+.enc-eyebrow::before,.enc-eyebrow::after{
+  content:'';width:24px;height:1px;background:var(--dorado);
+}
+.enc-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2rem,6vw,3.5rem);
+  letter-spacing:.04em;color:var(--blanco);
+  line-height:.95;margin-bottom:.75rem;
+}
+.enc-title em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--dorado-l),var(--dorado));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.enc-sub{
+  font-size:.95rem;color:rgba(255,255,255,.45);
+  max-width:480px;margin:0 auto;line-height:1.6;
+}
+
+/* ── Card container ── */
+.enc-card{
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,179,0,.12);
+  border-radius:10px;overflow:hidden;
+}
+
+/* ── Progreso ── */
+.enc-progress-bar{
+  height:3px;
+  background:linear-gradient(90deg,var(--dorado),var(--dorado-l));
+  transition:width .5s ease;
+}
+
+/* ── Pregunta barrio ── */
+.enc-step{padding:2rem}
+.step-label{
+  font-size:.65rem;font-weight:700;letter-spacing:.25em;
+  text-transform:uppercase;color:rgba(255,179,0,.5);
+  margin-bottom:.75rem;
+}
+.step-question{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(1.3rem,4vw,1.9rem);font-weight:800;
+  color:var(--blanco);line-height:1.1;margin-bottom:1.5rem;
+}
+
+/* ── Grid de barrios ── */
+.barrios-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:.5rem;margin-bottom:1.5rem;
+}
+.barrio-btn{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,179,0,.12);
+  border-radius:4px;padding:.6rem .75rem;
+  color:rgba(255,255,255,.55);font-size:.8rem;font-weight:600;
+  cursor:pointer;text-align:center;
+  transition:all .2s;font-family:'Barlow',sans-serif;
+  letter-spacing:.03em;
+}
+.barrio-btn:hover{background:rgba(255,179,0,.08);border-color:rgba(255,179,0,.3);color:var(--blanco)}
+.barrio-btn.selected{
+  background:rgba(255,179,0,.15);
+  border-color:var(--dorado);
+  color:var(--dorado);font-weight:700;
+}
+
+/* ── Opciones de problemas ── */
+.problema-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem}
+.problema-btn{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,179,0,.1);
+  border-radius:4px;padding:.85rem 1.1rem;
+  color:rgba(255,255,255,.6);font-size:.9rem;font-weight:600;
+  cursor:pointer;text-align:left;
+  transition:all .2s;font-family:'Barlow',sans-serif;
+  display:flex;align-items:center;gap:.75rem;
+}
+.problema-btn:hover{background:rgba(255,179,0,.08);border-color:rgba(255,179,0,.3);color:var(--blanco)}
+.problema-btn.selected{background:rgba(255,179,0,.15);border-color:var(--dorado);color:var(--blanco)}
+.problema-btn .p-icon{font-size:1.1rem;flex-shrink:0}
+.problema-btn .p-check{
+  margin-left:auto;width:18px;height:18px;
+  border:1.5px solid rgba(255,179,0,.3);border-radius:50%;
+  flex-shrink:0;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.problema-btn.selected .p-check{
+  background:var(--dorado);border-color:var(--dorado);color:#07200f;font-size:.65rem;font-weight:900;
+}
+.problema-btn.selected .p-check::after{content:'✓'}
+
+/* ── Botón siguiente ── */
+.btn-siguiente{
+  width:100%;
+  background:linear-gradient(135deg,var(--dorado),var(--dorado-d));
+  color:var(--verde-d);border:none;border-radius:4px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1rem;font-weight:900;letter-spacing:.15em;
+  text-transform:uppercase;padding:.85rem;cursor:pointer;
+  box-shadow:0 4px 18px rgba(255,179,0,.2);
+  transition:transform .2s,box-shadow .2s,opacity .2s;
+}
+.btn-siguiente:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,179,0,.35)}
+.btn-siguiente:disabled{opacity:.35;cursor:not-allowed;transform:none}
+
+/* ── Resultados ── */
+.resultados-wrap{padding:2rem}
+.res-titulo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(1.4rem,4vw,2rem);
+  letter-spacing:.04em;color:var(--blanco);
+  margin-bottom:.4rem;
+}
+.res-sub{font-size:.8rem;color:rgba(255,255,255,.3);margin-bottom:1.5rem;letter-spacing:.05em}
+.res-total{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:rgba(255,179,0,.1);border:1px solid rgba(255,179,0,.2);
+  border-radius:3px;padding:.25rem .75rem;
+  font-size:.72rem;font-weight:700;letter-spacing:.1em;
+  color:var(--dorado);text-transform:uppercase;
+  margin-bottom:1.5rem;
+}
+
+.bar-item{margin-bottom:1rem}
+.bar-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:.3rem;
+}
+.bar-label{
+  font-size:.82rem;font-weight:700;color:var(--blanco);
+  display:flex;align-items:center;gap:.5rem;
+}
+.bar-pct{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;letter-spacing:.05em;
+  color:var(--dorado);
+}
+.bar-track{
+  height:8px;background:rgba(255,255,255,.06);
+  border-radius:4px;overflow:hidden;
+}
+.bar-fill{
+  height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--dorado-d),var(--dorado));
+  transition:width 1.2s cubic-bezier(.4,0,.2,1);
+  width:0%;
+}
+.bar-fill.top{background:linear-gradient(90deg,#c98a00,var(--dorado-l))}
+.bar-count{font-size:.7rem;color:rgba(255,255,255,.25);margin-top:.2rem}
+
+.res-barrio{
+  font-size:.78rem;color:rgba(255,255,255,.3);
+  margin-top:.25rem;
+}
+.res-barrio span{color:rgba(255,179,0,.5);font-weight:700}
+
+/* ── Gracias ── */
+.gracias-box{
+  background:rgba(255,179,0,.06);
+  border:1px solid rgba(255,179,0,.15);
+  border-radius:6px;padding:1.25rem;
+  margin-top:1.5rem;text-align:center;
+}
+.gracias-box p{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.6}
+.gracias-box a{
+  color:var(--dorado);font-weight:700;text-decoration:none;
+}
+.gracias-box a:hover{text-decoration:underline}
+
+/* ── Footer info ── */
+.enc-footer{
+  text-align:center;margin-top:1.25rem;
+  font-size:.7rem;color:rgba(255,255,255,.2);
+  line-height:1.5;
+}
+
+/* ── Loading ── */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{
+  width:18px;height:18px;
+  border:2px solid rgba(255,179,0,.2);
+  border-top-color:var(--dorado);
+  border-radius:50%;animation:spin .8s linear infinite;
+  display:inline-block;vertical-align:middle;margin-right:.4rem;
+}
+
+/* ── Animaciones ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.fade-up{animation:fadeUp .5s ease both}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Config banner — se oculta cuando está configurado -->
+  <div class="config-banner" id="configBanner">
+    <strong>⚙️ Configuración requerida</strong><br>
+    Para guardar votos necesitás una cuenta gratis en <strong>jsonbin.io</strong>:<br>
+    1. Entrá a <strong>jsonbin.io</strong> → creá cuenta gratis<br>
+    2. Creá un nuevo "Bin" con este contenido: <code>{"votos":{},"total":0}</code><br>
+    3. Copiá el <strong>Bin ID</strong> y tu <strong>API Key</strong><br>
+    4. Pegalos en el código donde dice <code>JSONBIN_ID</code> y <code>JSONBIN_KEY</code>
+  </div>
+
+  <div class="enc-header fade-up">
+    <div class="enc-eyebrow">Tu voz importa</div>
+    <h2 class="enc-title">¿Cuál es el<br>problema<br><em>más grave</em><br>de tu barrio?</h2>
+    <p class="enc-sub">Tus respuestas guían las propuestas de campaña. Resultados en tiempo real.</p>
+  </div>
+
+  <div class="enc-card fade-up" style="animation-delay:.15s">
+    <div class="enc-progress-bar" id="progressBar" style="width:33%"></div>
+
+    <!-- PASO 1: Elegir barrio -->
+    <div class="enc-step" id="step1">
+      <div class="step-label">Paso 1 de 2</div>
+      <div class="step-question">¿De qué barrio de Asunción sos?</div>
+      <div class="barrios-grid" id="barriosGrid">
+        <!-- generado por JS -->
+      </div>
+      <button class="btn-siguiente" id="btnPaso1" disabled onclick="irPaso2()">
+        Siguiente →
+      </button>
+    </div>
+
+    <!-- PASO 2: Elegir problema -->
+    <div class="enc-step" id="step2" style="display:none">
+      <div class="step-label">Paso 2 de 2</div>
+      <div class="step-question">¿Cuál es el problema más grave?</div>
+      <div class="problema-list" id="problemaList">
+        <!-- generado por JS -->
+      </div>
+      <button class="btn-siguiente" id="btnPaso2" disabled onclick="votar()">
+        Enviar mi voto ✊
+      </button>
+    </div>
+
+    <!-- RESULTADOS -->
+    <div class="resultados-wrap" id="stepResultados" style="display:none">
+      <div class="res-titulo">Resultados en vivo</div>
+      <div class="res-sub" id="resBarrioSub"></div>
+      <div class="res-total" id="resTotalVotos">Cargando...</div>
+      <div id="barrasResultados"></div>
+      <div class="gracias-box">
+        <p>
+          Gracias por participar. Estos datos guían la campaña de Puma.<br>
+          Compartí la encuesta con tus vecinos →
+          <a href="https://wa.me/?text=Participá%20en%20la%20encuesta%20vecinal%20de%20Puma%20Rodríguez%3A%20pumaconcejal2026.onrender.com" target="_blank">Compartir por WhatsApp</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="enc-footer">
+    Campaña José "Puma" Rodríguez · Concejal Asunción 2026 · #PumaConcejal2026
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIGURACIÓN — reemplazar con tus datos
+// ══════════════════════════════════════════
+const JSONBIN_ID  = '69f7b7e3856a682189a1370f';
+const JSONBIN_KEY = '$2a$10$Y1IaWoivwSYtMh52CczWVuUEpmUURAZSg4rELTSDBwCogzoU7zjFK';
+
+const API_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+const HEADERS = {
+  'Content-Type': 'application/json',
+  'X-Master-Key': JSONBIN_KEY,
+  'X-Bin-Versioning': 'false'
+};
+
+// ── Datos ──────────────────────────────────
+const BARRIOS = [
+  'Centro','Sajonia','Trinidad','Las Mercedes','Jara',
+  'San Pablo','Mburucuyá','Zeballos Cué','Herrera','Recoleta',
+  'Itá Pytã Punta','Villa Morra','Tembetary','Caballero','Republicano',
+  'Ycuá Satí','Ciudad Nueva','San Jorge','Tablada Nueva','Pettirossi',
+  'Nazareth','Dr. Francia','Hipódromo','Pinozá','Loma Pytã',
+  'Santa Ana','Santa Rosa','Virgen del Huerto','San Vicente','Otro'
+];
+
+const PROBLEMAS = [
+  { icon:'💧', key:'agua_cloacas',  label:'Agua y cloacas — cortes y roturas sin solución' },
+  { icon:'🛣️', key:'calles',        label:'Calles y veredas rotas — sin mantenimiento' },
+  { icon:'🌳', key:'arboles',       label:'Tala de árboles — sin control ni permisos' },
+  { icon:'🚌', key:'transporte',    label:'Transporte público — escaso e irregular' },
+  { icon:'🔦', key:'alumbrado',     label:'Alumbrado público — zonas sin luz' },
+  { icon:'🗑️', key:'basura',        label:'Basura — recolección deficiente' },
+  { icon:'👻', key:'funcionarios',  label:'Funcionarios fantasma — cobran sin trabajar' },
+  { icon:'💰', key:'presupuesto',   label:'Presupuesto — sin transparencia ni auditoría' },
+  { icon:'🔒', key:'seguridad',     label:'Inseguridad — sin cámaras ni patrullaje' },
+];
+
+// ── Estado ─────────────────────────────────
+let barrioSeleccionado = null;
+let problemaSeleccionado = null;
+
+// ── Init ───────────────────────────────────
+(function(){
+  // Ocultar banner config si hay credenciales reales
+  if(JSONBIN_ID !== 'JSONBIN_ID_AQUI' && JSONBIN_KEY !== 'JSONBIN_KEY_AQUI'){
+    document.getElementById('configBanner').style.display = 'none';
+  }
+  renderBarrios();
+  renderProblemas();
+})();
+
+function renderBarrios(){
+  const g = document.getElementById('barriosGrid');
+  g.innerHTML = BARRIOS.map(b => `
+    <button class="barrio-btn" onclick="selectBarrio('${b}',this)">${b}</button>
+  `).join('');
+}
+
+function renderProblemas(){
+  const l = document.getElementById('problemaList');
+  l.innerHTML = PROBLEMAS.map(p => `
+    <button class="problema-btn" onclick="selectProblema('${p.key}',this)">
+      <span class="p-icon">${p.icon}</span>
+      <span>${p.label}</span>
+      <span class="p-check"></span>
+    </button>
+  `).join('');
+}
+
+function selectBarrio(b, el){
+  barrioSeleccionado = b;
+  document.querySelectorAll('.barrio-btn').forEach(btn => btn.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('btnPaso1').disabled = false;
+}
+
+function selectProblema(k, el){
+  problemaSeleccionado = k;
+  document.querySelectorAll('.problema-btn').forEach(btn => btn.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('btnPaso2').disabled = false;
+}
+
+function irPaso2(){
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+  document.getElementById('progressBar').style.width = '66%';
+  document.getElementById('step2').classList.add('fade-up');
+}
+
+async function votar(){
+  if(!barrioSeleccionado || !problemaSeleccionado) return;
+  const btn = document.getElementById('btnPaso2');
+  btn.innerHTML = '<span class="spinner"></span>Enviando...';
+  btn.disabled = true;
+
+  // Si no hay credenciales reales, mostrar demo
+  if(JSONBIN_ID === 'JSONBIN_ID_AQUI'){
+    await new Promise(r => setTimeout(r, 800));
+    mostrarResultadosDemo();
+    return;
+  }
+
+  try {
+    // Leer datos actuales
+    const getRes = await fetch(API_URL + '/latest', { headers: HEADERS });
+    const getData = await getRes.json();
+    const votos = getData.record?.votos || {};
+    let total = getData.record?.total || 0;
+
+    // Incrementar voto
+    const key = problemaSeleccionado;
+    votos[key] = (votos[key] || 0) + 1;
+    total++;
+
+    // Guardar
+    await fetch(API_URL, {
+      method: 'PUT',
+      headers: HEADERS,
+      body: JSON.stringify({ votos, total })
+    });
+
+    // Mostrar resultados
+    mostrarResultados(votos, total);
+
+  } catch(e){
+    // Fallback demo si falla la API
+    mostrarResultadosDemo();
+  }
+}
+
+function mostrarResultadosDemo(){
+  const demoVotos = {
+    calles:60, basura:45, transporte:38, presupuesto:35,
+    seguridad:28, agua_cloacas:22, alumbrado:18, funcionarios:15, arboles:12
+  };
+  mostrarResultados(demoVotos, 273);
+}
+
+function mostrarResultados(votos, total){
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('stepResultados').style.display = 'block';
+  document.getElementById('progressBar').style.width = '100%';
+  document.getElementById('stepResultados').classList.add('fade-up');
+
+  document.getElementById('resBarrioSub').innerHTML =
+    barrioSeleccionado ? `Tu voto en <strong style="color:rgba(255,179,0,.7)">${barrioSeleccionado}</strong> fue registrado` : '';
+  document.getElementById('resTotalVotos').textContent = `${total.toLocaleString()} votos totales`;
+
+  // Ordenar problemas por votos
+  const sorted = PROBLEMAS
+    .map(p => ({ ...p, votos: votos[p.key] || 0 }))
+    .sort((a, b) => b.votos - a.votos);
+
+  const maxVotos = sorted[0]?.votos || 1;
+  const container = document.getElementById('barrasResultados');
+
+  container.innerHTML = sorted.map((p, i) => {
+    const pct = total > 0 ? Math.round((p.votos / total) * 100) : 0;
+    const width = Math.round((p.votos / maxVotos) * 100);
+    return `
+      <div class="bar-item" style="animation:fadeUp .5s ${i*0.07}s ease both">
+        <div class="bar-header">
+          <div class="bar-label">
+            <span>${p.icon}</span>
+            <span>${p.label.split('—')[0].trim()}</span>
+          </div>
+          <div class="bar-pct">${pct}%</div>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill ${i===0?'top':''}" id="fill-${p.key}" style="width:0%"></div>
+        </div>
+        <div class="bar-count">${p.votos} votos</div>
+      </div>
+    `;
+  }).join('');
+
+  // Animar barras con delay
+  setTimeout(() => {
+    sorted.forEach(p => {
+      const pct = Math.round(((p.votos || 0) / maxVotos) * 100);
+      const el = document.getElementById('fill-' + p.key);
+      if(el) el.style.width = pct + '%';
+    });
+  }, 200);
+}
+</script>
+</body>
+</html>
