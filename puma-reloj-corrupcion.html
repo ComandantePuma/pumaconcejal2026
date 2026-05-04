@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Reloj de la Corrupción Municipal — Asunción 2026. Datos verificados en tiempo real."/>
+<title>Reloj de la Corrupción — Asunción</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --negro:#050a05;
+  --rojo:#dc2626;
+  --rojo-dim:rgba(220,38,38,.15);
+  --dorado:#FFB300;
+  --dorado-dim:rgba(255,179,0,.12);
+  --verde:#0A3D2A;
+  --verde-d:#061f15;
+  --blanco:#f5f4ef;
+  --gris:rgba(255,255,255,.08);
+  --texto:rgba(245,244,239,.55);
+}
+html,body{width:100%;min-height:100vh;background:var(--negro);color:var(--blanco);font-family:'Barlow',sans-serif;overflow-x:hidden}
+::selection{background:var(--dorado);color:#000}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:rgba(220,38,38,.4)}
+
+/* ── Scanlines ── */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:.85rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(5,10,5,.9);
+  border-bottom:1px solid rgba(220,38,38,.2);
+  backdrop-filter:blur(12px);
+}
+.nav-brand{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;letter-spacing:.15em;
+  color:var(--blanco);
+}
+.nav-brand span{color:var(--rojo)}
+.nav-badge{
+  font-size:.6rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;
+  border:1px solid rgba(220,38,38,.4);color:var(--rojo);
+  padding:.25rem .6rem;border-radius:2px;
+  display:flex;align-items:center;gap:.4rem;
+}
+.live-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--rojo);
+  animation:blink 1.2s ease infinite;
+}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+
+/* ── HERO CLOCK ── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:6rem 1.5rem 3rem;
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(220,38,38,.06),transparent 70%);
+  pointer-events:none;
+}
+.hero-label{
+  font-size:.65rem;font-weight:700;letter-spacing:.35em;text-transform:uppercase;
+  color:rgba(220,38,38,.7);margin-bottom:1.25rem;
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+}
+.hero-label::before,.hero-label::after{content:'';width:32px;height:1px;background:rgba(220,38,38,.3)}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2rem,6vw,4rem);letter-spacing:.05em;
+  color:rgba(245,244,239,.35);margin-bottom:.5rem;
+  text-transform:uppercase;
+}
+.clock-main{
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(2.8rem,10vw,8rem);font-weight:700;line-height:.9;
+  color:var(--rojo);
+  text-shadow:0 0 40px rgba(220,38,38,.3);
+  letter-spacing:-.02em;
+  margin:.5rem 0;
+  transition:color .1s;
+}
+.clock-unit{
+  font-size:.7rem;font-weight:700;letter-spacing:.25em;
+  text-transform:uppercase;color:var(--texto);
+  margin-bottom:1.5rem;
+}
+.clock-desc{
+  font-size:clamp(.85rem,2vw,1.1rem);color:var(--texto);
+  max-width:560px;line-height:1.65;margin:0 auto 2rem;
+}
+.clock-desc strong{color:var(--dorado);font-weight:700}
+.clock-source{
+  font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.08);padding:.3rem .8rem;border-radius:2px;
+  display:inline-block;
+}
+
+/* ── SESSION ── */
+.session-box{
+  background:rgba(220,38,38,.08);
+  border:1px solid rgba(220,38,38,.2);
+  border-radius:6px;padding:1.25rem 1.75rem;
+  margin:.75rem auto;max-width:480px;width:100%;
+}
+.session-label{
+  font-size:.65rem;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(220,38,38,.6);margin-bottom:.4rem;
+}
+.session-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(1.6rem,5vw,3rem);font-weight:700;
+  color:var(--rojo);line-height:1;
+}
+.session-sub{
+  font-size:.75rem;color:var(--texto);margin-top:.3rem;
+}
+
+/* ── SHARE ── */
+.share-btn{
+  background:linear-gradient(135deg,var(--dorado),#c98a00);
+  color:#050a05;border:none;border-radius:3px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;
+  padding:.75rem 2.5rem;cursor:pointer;
+  box-shadow:0 4px 20px rgba(255,179,0,.25);
+  transition:transform .2s,box-shadow .2s;
+  margin-top:1.25rem;
+}
+.share-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,179,0,.4)}
+
+/* ── DIVIDER ── */
+.gold-line{height:1px;background:linear-gradient(to right,transparent,rgba(255,179,0,.2),transparent);margin:0}
+
+/* ── DATOS SECTION ── */
+.datos{padding:4rem 1.5rem;max-width:1000px;margin:0 auto}
+.section-label{
+  font-size:.65rem;font-weight:700;letter-spacing:.35em;
+  text-transform:uppercase;color:rgba(220,38,38,.6);
+  display:flex;align-items:center;gap:.6rem;margin-bottom:2rem;
+}
+.section-label::before{content:'';width:24px;height:1px;background:rgba(220,38,38,.3)}
+
+/* ── CONTADORES GRID ── */
+.counters-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1px;border:1px solid rgba(255,255,255,.06);border-radius:6px;
+  overflow:hidden;margin-bottom:3rem;
+}
+.counter-item{
+  background:rgba(255,255,255,.02);
+  padding:1.5rem 1.25rem;
+  position:relative;
+}
+.counter-item::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:rgba(220,38,38,.4);
+}
+.ci-label{
+  font-size:.62rem;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--texto);margin-bottom:.5rem;
+}
+.ci-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(1.4rem,3.5vw,2rem);font-weight:700;
+  color:var(--rojo);line-height:1.1;
+  transition:color .1s;
+}
+.ci-sub{font-size:.7rem;color:rgba(255,255,255,.25);margin-top:.25rem}
+
+/* ── TIMELINE ── */
+.timeline{margin-bottom:3rem}
+.tl-item{
+  display:grid;grid-template-columns:80px 1fr;gap:1.25rem;
+  align-items:start;padding:1rem 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.tl-item:last-child{border-bottom:none}
+.tl-time{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;color:rgba(220,38,38,.6);
+  font-weight:700;padding-top:.1rem;
+  text-align:right;
+}
+.tl-body{}
+.tl-title{
+  font-size:.9rem;font-weight:700;color:var(--blanco);margin-bottom:.2rem;
+}
+.tl-desc{font-size:.8rem;color:var(--texto);line-height:1.5}
+.tl-amount{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;color:var(--dorado);margin-top:.3rem;
+}
+
+/* ── COSTANERA ── */
+.costanera{
+  background:rgba(220,38,38,.05);
+  border:1px solid rgba(220,38,38,.15);
+  border-radius:6px;padding:1.75rem;margin-bottom:3rem;
+}
+.cost-header{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1.5rem;font-weight:900;color:var(--blanco);
+  margin-bottom:1.25rem;
+}
+.cost-header span{color:var(--rojo)}
+.cost-compare{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center}
+.cost-box{
+  background:rgba(0,0,0,.2);
+  border-radius:4px;padding:1rem;text-align:center;
+}
+.cost-box-label{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--texto);margin-bottom:.5rem}
+.cost-box-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.5rem;font-weight:700;color:var(--blanco);
+}
+.cost-box-val.red{color:var(--rojo)}
+.cost-box-val.green{color:#4ade80}
+.cost-box-sub{font-size:.65rem;color:var(--texto);margin-top:.25rem}
+.cost-vs{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;color:rgba(255,255,255,.2);
+  text-align:center;
+}
+.cost-diff{
+  text-align:center;margin-top:1rem;
+  font-size:.85rem;color:var(--texto);
+}
+.cost-diff strong{color:var(--rojo)}
+
+/* ── CONCEJALES ── */
+.concejales-wrap{margin-bottom:3rem}
+.conc-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1.3rem;font-weight:900;color:var(--blanco);
+  margin-bottom:1rem;
+}
+.conc-title span{color:var(--rojo)}
+.conc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.5rem}
+.conc-item{
+  background:rgba(220,38,38,.06);
+  border:1px solid rgba(220,38,38,.15);
+  border-radius:4px;padding:.6rem .75rem;
+  font-size:.72rem;color:rgba(255,255,255,.5);
+  letter-spacing:.03em;
+}
+.conc-item.highlight{
+  background:rgba(220,38,38,.12);
+  border-color:rgba(220,38,38,.35);
+  color:rgba(245,244,239,.75);
+}
+
+/* ── PUMA CTA ── */
+.puma-cta{
+  background:linear-gradient(135deg,var(--verde-d),var(--verde));
+  border:1px solid rgba(255,179,0,.15);
+  border-radius:8px;padding:2.5rem 2rem;
+  text-align:center;margin-bottom:3rem;
+  position:relative;overflow:hidden;
+}
+.puma-cta::before{
+  content:'PUMA';
+  position:absolute;right:-1rem;bottom:-2rem;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:9rem;color:rgba(255,255,255,.03);
+  pointer-events:none;letter-spacing:.05em;
+}
+.puma-cta h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(1.5rem,5vw,3rem);
+  color:var(--blanco);letter-spacing:.04em;
+  margin-bottom:.5rem;
+}
+.puma-cta h2 em{font-style:normal;color:var(--dorado)}
+.puma-cta p{
+  font-size:.95rem;color:rgba(255,255,255,.5);
+  max-width:480px;margin:0 auto 1.5rem;line-height:1.65;
+}
+.cta-btns{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center}
+.btn-gold{
+  background:linear-gradient(135deg,var(--dorado),#c98a00);
+  color:#050a05;font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:.95rem;letter-spacing:.15em;
+  text-transform:uppercase;padding:.75rem 2rem;
+  border:none;border-radius:3px;cursor:pointer;
+  text-decoration:none;display:inline-block;
+  transition:transform .2s,box-shadow .2s;
+  box-shadow:0 4px 16px rgba(255,179,0,.25);
+}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,179,0,.4)}
+.btn-ghost{
+  border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:.95rem;letter-spacing:.15em;
+  text-transform:uppercase;padding:.75rem 2rem;
+  border-radius:3px;cursor:pointer;
+  text-decoration:none;display:inline-block;
+  transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--dorado);color:var(--dorado);transform:translateY(-2px)}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid rgba(255,255,255,.04);
+  padding:1.5rem 2rem;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;
+  font-size:.7rem;color:rgba(255,255,255,.2);letter-spacing:.1em;
+}
+footer a{color:rgba(255,179,0,.4);text-decoration:none}
+footer a:hover{color:var(--dorado)}
+
+/* ── Toast ── */
+.toast{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);
+  background:var(--verde);border:1px solid rgba(255,179,0,.3);
+  color:var(--blanco);padding:.75rem 1.5rem;border-radius:4px;
+  font-size:.85rem;font-weight:700;letter-spacing:.05em;
+  opacity:0;transition:opacity .3s;pointer-events:none;z-index:9998;
+  white-space:nowrap;
+}
+.toast.show{opacity:1}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .cost-compare{grid-template-columns:1fr}
+  .cost-vs{display:none}
+  nav{padding:.75rem 1rem}
+  .datos{padding:3rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand"><span>PUMA</span> CONCEJAL 2026</div>
+  <div class="nav-badge"><div class="live-dot"></div>EN VIVO · DATOS REALES</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <div class="hero-label">Reloj de la Corrupción Municipal · Asunción</div>
+  <div class="hero-title">Desde que cargaste esta página</div>
+  <div class="hero-title">la Municipalidad acumuló</div>
+
+  <div class="clock-main" id="sesionClock">Gs. 0</div>
+  <div class="clock-unit">en intereses de deuda</div>
+
+  <div class="clock-desc">
+    Los bonos emitidos acumulan intereses a razón de
+    <strong>Gs. 4.129 por segundo</strong>, las 24 horas, los 365 días del año.
+    Mientras dormís. Mientras trabajás. Mientras leés esto.
+    <br>
+    Y <strong>USD 20,4 millones</strong> ya vencieron sin que nadie los pagara.
+  </div>
+
+  <div class="clock-source">Fuente: REDIC Data · redicdata.netlify.app · Datos verificados 2025-2026</div>
+
+  <button class="share-btn" onclick="compartir()">Compartir este reloj</button>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- DATOS -->
+<div class="datos">
+
+  <!-- Contadores en vivo -->
+  <div class="section-label">Contadores en tiempo real</div>
+  <div class="counters-grid">
+    <div class="counter-item">
+      <div class="ci-label">Intereses por segundo</div>
+      <div class="ci-num">Gs. 4.129</div>
+      <div class="ci-sub">cada segundo, sin parar</div>
+    </div>
+    <div class="counter-item">
+      <div class="ci-label">Intereses hoy (desde medianoche)</div>
+      <div class="ci-num" id="hoyCounter">Gs. 0</div>
+      <div class="ci-sub">acumulado del día</div>
+    </div>
+    <div class="counter-item">
+      <div class="ci-label">Deuda total de bonos</div>
+      <div class="ci-num">Gs. 1,6 B</div>
+      <div class="ci-sub">USD 263,6 millones hasta 2035</div>
+    </div>
+    <div class="counter-item">
+      <div class="ci-label">Incumplimientos seguidos</div>
+      <div class="ci-num">11</div>
+      <div class="ci-sub">mayo 2025 a febrero 2026</div>
+    </div>
+    <div class="counter-item">
+      <div class="ci-label">Sin pagar a bonistas</div>
+      <div class="ci-num">USD 20,4M</div>
+      <div class="ci-sub">vencidos sin rendición</div>
+    </div>
+    <div class="counter-item">
+      <div class="ci-label">Bonos desviados (CGR confirmó)</div>
+      <div class="ci-num">Gs. 512 MM</div>
+      <div class="ci-sub">a gasto corriente, no a obras</div>
+    </div>
+  </div>
+
+  <!-- Timeline de la deuda -->
+  <div class="section-label">Lo que no te cuentan · Cronología</div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">2024</div>
+      <div class="tl-body">
+        <div class="tl-title">14 concejales aprueban las cuentas de Nenecho</div>
+        <div class="tl-desc">ABC Color ya había reportado el desvío. Lo aprobaron igual. Varios de esos 14 buscan reelección en 2026.</div>
+        <div class="tl-amount">Desvío conocido: Gs. 500.000 millones</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">Abr 2025</div>
+      <div class="tl-body">
+        <div class="tl-title">CGR confirma el desvío. Los mismos concejales vuelven a aprobar.</div>
+        <div class="tl-desc">Con auditoría oficial en mano, la Junta Municipal ignoró los resultados y aprobó nuevamente la rendición de cuentas.</div>
+        <div class="tl-amount">Desvío confirmado: Gs. 512.000 millones</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">2025</div>
+      <div class="tl-body">
+        <div class="tl-title">Costanera rifada a precio irrisorio</div>
+        <div class="tl-desc">5 hectáreas del frente costero vendidas a USD 17,65/m² cuando el mercado valía USD 411,76/m². "De acuerdo a la cara del cliente", dijo Nenecho.</div>
+        <div class="tl-amount">Pérdida estimada: USD 26,3 millones · USD 51 por habitante</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">Mar 2027</div>
+      <div class="tl-body">
+        <div class="tl-title">Bomba de tiempo: vencen Gs. 120 mil millones</div>
+        <div class="tl-desc">Bello pateó el pago de intereses al próximo gobierno. Quien gane en octubre 2026 hereda esta deuda sin haberla creado.</div>
+        <div class="tl-amount">Gs. 120.000 millones postergados al próximo intendente</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- La Costanera -->
+  <div class="section-label">El negocio de la Costanera · Lo que te robaron</div>
+  <div class="costanera">
+    <div class="cost-header">Fundación MuCi — <span>El robo a la luz del día</span></div>
+    <div class="cost-compare">
+      <div class="cost-box">
+        <div class="cost-box-label">Precio de venta</div>
+        <div class="cost-box-val red">USD 17,65/m²</div>
+        <div class="cost-box-sub">Lo que pagó la Fundación MuCi</div>
+      </div>
+      <div class="cost-vs">VS</div>
+      <div class="cost-box">
+        <div class="cost-box-label">Precio real del mercado</div>
+        <div class="cost-box-val green">USD 411,76/m²</div>
+        <div class="cost-box-sub">Valor real de la zona en 2025</div>
+      </div>
+    </div>
+    <div class="cost-diff">
+      Vendieron 23 veces más barato. En total, <strong>USD 26,3 millones que se fueron</strong>.<br>
+      Eso son <strong>USD 51 de cada uno de los 515.000 habitantes de Asunción</strong>.
+    </div>
+  </div>
+
+  <!-- Nómina -->
+  <div class="section-label">El ejército de funcionarios · Nómina real</div>
+  <div class="counters-grid" style="margin-bottom:3rem">
+    <div class="counter-item">
+      <div class="ci-label">Empleados municipales</div>
+      <div class="ci-num">9.088</div>
+      <div class="ci-sub">planilla real feb 2025</div>
+    </div>
+    <div class="counter-item">
+      <div class="ci-label">Costo mensual</div>
+      <div class="ci-num">Gs. 56,6 MM</div>
+      <div class="ci-sub">por mes, solo en sueldos</div>
+    </div>
+    <div class="counter-item">
+      <div class="ci-label">Sueldo promedio municipal</div>
+      <div class="ci-num">Gs. 6,2 MM</div>
+      <div class="ci-sub">2,15 veces el salario mínimo</div>
+    </div>
+    <div class="counter-item">
+      <div class="ci-label">Obras que recibís por lo que pagás</div>
+      <div class="ci-num">8,3%</div>
+      <div class="ci-sub">Gs. 109k obras vs Gs. 1,3M sueldos</div>
+    </div>
+    <div class="counter-item">
+      <div class="ci-label">Jornales contratados</div>
+      <div class="ci-num">45%</div>
+      <div class="ci-sub">del gasto de personal · clientelismo</div>
+    </div>
+    <div class="counter-item">
+      <div class="ci-label">Sin justificación en nómina</div>
+      <div class="ci-num">Gs. 64,6 MM</div>
+      <div class="ci-sub">presupuestado vs real: sobran</div>
+    </div>
+  </div>
+
+  <!-- Pobreza -->
+  <div class="section-label">La otra cara · Pobreza en los barrios</div>
+  <div class="counters-grid" style="margin-bottom:3rem">
+    <div class="counter-item" style="border-top-color:rgba(255,179,0,.4)">
+      <div class="ci-label" style="color:rgba(255,179,0,.6)">Banco San Miguel · NBI</div>
+      <div class="ci-num" style="color:var(--dorado)">53,5%</div>
+      <div class="ci-sub">el barrio más golpeado de Asunción</div>
+    </div>
+    <div class="counter-item" style="border-top-color:rgba(255,179,0,.4)">
+      <div class="ci-label" style="color:rgba(255,179,0,.6)">Hogares en Asunción con NBI</div>
+      <div class="ci-num" style="color:var(--dorado)">133.600</div>
+      <div class="ci-sub">sin necesidades básicas cubiertas</div>
+    </div>
+    <div class="counter-item" style="border-top-color:rgba(255,179,0,.4)">
+      <div class="ci-label" style="color:rgba(255,179,0,.6)">Barrios con +25% de NBI</div>
+      <div class="ci-num" style="color:var(--dorado)">11</div>
+      <div class="ci-sub">mientras la deuda crece a Gs. 4.129/seg</div>
+    </div>
+    <div class="counter-item" style="border-top-color:rgba(255,179,0,.4)">
+      <div class="ci-label" style="color:rgba(255,179,0,.6)">Brecha mejor/peor barrio</div>
+      <div class="ci-num" style="color:var(--dorado)">7,4x</div>
+      <div class="ci-sub">la desigualdad más brutal de la ciudad</div>
+    </div>
+  </div>
+
+  <!-- CTA Puma -->
+  <div class="puma-cta">
+    <h2>Basta de que nos <em>roben.</em></h2>
+    <p>
+      Estos datos son reales. Están verificados. Y los concejales que aprobaron todo esto buscan reelección.<br>
+      El 4 de octubre, Asunción decide.
+    </p>
+    <div class="cta-btns">
+      <a href="https://pumaconcejal2026.onrender.com" target="_blank" class="btn-gold">Ver propuestas de Puma</a>
+      <a href="https://wa.me/595981421717?text=Vi%20el%20Reloj%20de%20la%20Corrupc%C3%B3n%20y%20quiero%20apoyar%20a%20Puma" target="_blank" class="btn-ghost">Escribirle a Puma</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="gold-line"></div>
+
+<footer>
+  <span>© 2026 Campaña José "Puma" Rodríguez · Concejal Asunción</span>
+  <span>Datos: <a href="https://redicdata.netlify.app" target="_blank">redicdata.netlify.app</a> · Verificados CGR 2025</span>
+  <span>@comandantepuma · #PumaConcejal2026</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Constantes REDIC ──────────────────────────────
+const GS_POR_SEGUNDO = 4129;
+const sessionStart = Date.now();
+
+// ── Formatear guaraníes ───────────────────────────
+function fmtGs(n){
+  if(n >= 1e9) return 'Gs. ' + (n/1e9).toFixed(2) + ' MM millones';
+  if(n >= 1e6) return 'Gs. ' + Math.round(n/1e6).toLocaleString('es-PY') + ' millones';
+  if(n >= 1e3) return 'Gs. ' + Math.round(n/1e3).toLocaleString('es-PY') + ' mil';
+  return 'Gs. ' + Math.round(n).toLocaleString('es-PY');
+}
+
+function fmtGsShort(n){
+  if(n >= 1e9) return 'Gs. ' + (n/1e9).toFixed(3).replace('.',',') + 'B';
+  if(n >= 1e6) return 'Gs. ' + (n/1e6).toFixed(1).replace('.',',') + 'M';
+  if(n >= 1e3) return 'Gs. ' + (n/1e3).toFixed(1).replace('.',',') + 'K';
+  return 'Gs. ' + Math.round(n).toLocaleString('es-PY');
+}
+
+// ── Ticker principal ──────────────────────────────
+function tick(){
+  const elapsed = (Date.now() - sessionStart) / 1000;
+  const sesion = elapsed * GS_POR_SEGUNDO;
+  
+  // Reloj principal
+  document.getElementById('sesionClock').textContent = fmtGs(sesion);
+  
+  // Desde medianoche
+  const now = new Date();
+  const secHoy = now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds();
+  const hoy = secHoy * GS_POR_SEGUNDO;
+  document.getElementById('hoyCounter').textContent = fmtGsShort(hoy);
+}
+
+tick();
+setInterval(tick, 250);
+
+// ── Compartir ─────────────────────────────────────
+function compartir(){
+  const elapsed = Math.round((Date.now() - sessionStart) / 1000);
+  const total = Math.round(elapsed * GS_POR_SEGUNDO);
+  const msg = `En ${elapsed} segundos que estuve en esta página, la Municipalidad de Asunción acumuló Gs. ${total.toLocaleString('es-PY')} en intereses de deuda. Gs. 4.129 por segundo. Datos verificados: redicdata.netlify.app — #PumaConcejal2026 pumaconcejal2026.onrender.com`;
+  
+  if(navigator.share){
+    navigator.share({
+      title:'Reloj de la Corrupción · Asunción',
+      text: msg,
+      url: window.location.href
+    }).catch(()=>{});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(msg).then(()=>{
+      showToast('✅ Mensaje copiado — pegalo donde quieras');
+    });
+  }
+}
+
+// ── Toast ─────────────────────────────────────────
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
