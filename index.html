@@ -146,6 +146,76 @@
 
   /* ── Fade up delay helpers ── */
   .d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}
+
+  /* ═══ MOBILE FIXES ═══ */
+  @media(max-width:480px){
+    /* Hero name mas chico */
+    .hero h1 { font-size: clamp(2.8rem,14vw,5rem) !important; }
+
+    /* Countdown compacto */
+    .cd-num { font-size: 1.8rem !important; }
+    .cd-box { padding: 1rem .6rem !important; min-width: 60px !important; }
+
+    /* Secciones con menos padding */
+    section { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+
+    /* Stats 2x2 siempre */
+    .stats-wrap { grid-template-columns: 1fr 1fr !important; }
+
+    /* Propuestas full width */
+    .prop { padding: 1.25rem !important; }
+    .prop-num-bg { font-size: 7rem !important; }
+
+    /* Ordenanzas sin grid horizontal */
+    .news-card { padding: 1.1rem !important; }
+
+    /* Footer stack */
+    footer { flex-direction:column; text-align:center; gap:.5rem; padding: 1.25rem 1rem; }
+    .footer-links { justify-content:center; gap: 1rem; }
+
+    /* Marquee text size */
+    .ticker-track { font-size: .65rem !important; }
+
+    /* Eyebrow sin linea lateral */
+    .eyebrow::before { width: 14px !important; }
+
+    /* Botones full width en mobile */
+    .hero-cta-wrap { flex-direction: column; }
+    .hero-cta-wrap a { width: 100%; text-align: center; }
+
+    /* CTA apoyame */
+    .apoyo-grid { grid-template-columns: 1fr !important; }
+
+    /* Noticias 1 col */
+    #noticias .grid { grid-template-columns: 1fr !important; }
+
+    /* Encuesta grid 1 col */
+    #encuesta .grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+    #encuesta a { width: 100%; text-align: center; }
+
+    /* Quien soy 1 col */
+    #quien .grid { grid-template-columns: 1fr !important; }
+
+    /* Texto base más legible */
+    p { font-size: .9rem !important; }
+  }
+
+  /* Touch targets mínimos 44px */
+  a, button { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+  nav a, nav button { min-height: 36px; }
+
+  /* Evitar zoom en inputs iOS */
+  input, select, textarea { font-size: 16px !important; }
+
+  /* Mejor scroll en iOS */
+  html { -webkit-overflow-scrolling: touch; }
+
+  /* Propuestas: en mobile el numero de fondo no molesta */
+  @media(max-width:640px){
+    .props-num { display: none; }
+    .prop-num-bg { right: .5rem; font-size: 6rem !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -226,7 +296,7 @@
       </p>
 
       <!-- CTAs -->
-      <div class="flex flex-wrap gap-3">
+      <div class="flex flex-wrap gap-3 w-full sm:w-auto hero-cta-wrap">
         <a href="#propuestas" class="btn-gold text-sm sm:text-base tracking-widest uppercase px-7 py-3.5">
           Ver propuestas 👊
         </a>
@@ -446,7 +516,7 @@
   <div class="max-w-3xl mx-auto text-center reveal">
     <div class="gold-line mb-12"></div>
     <p class="eyebrow justify-center">⏱ Faltan para las elecciones</p>
-    <div class="flex items-end justify-center gap-2 sm:gap-4 mb-4">
+    <div class="flex items-end justify-center gap-1 sm:gap-4 mb-4">
       <div class="cd-box"><div class="cd-num" id="cd-dias">--</div><div class="text-white/35 text-xs tracking-widest uppercase mt-1.5">Días</div></div>
       <div class="text-dorado/25 text-4xl font-black mb-3">:</div>
       <div class="cd-box"><div class="cd-num" id="cd-horas">--</div><div class="text-white/35 text-xs tracking-widest uppercase mt-1.5">Horas</div></div>
@@ -549,7 +619,7 @@
 
       <!-- Ordenanza 1 -->
       <div class="news-card reveal" style="border-color:rgba(255,179,0,.2);background:rgba(10,61,42,.4)">
-        <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+        <div class="flex flex-col gap-4">
 
           <!-- Número -->
           <div class="shrink-0 flex flex-col items-center justify-center"
